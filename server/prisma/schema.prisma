@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String           @id @unique @default(uuid())
+  email            String           @unique
+  phoneNumber      String
+  surname          String
+  firstname        String
+  lastname         String?
+  role             String
+  createdAt        DateTime         @default(now())
+  currentPostingId String?
+  auth_session     Session[]
+  key              Key[]
+  screeningEntries ScreeningEntry[]
+  postingHistory   Posting[]
+  staffFolder      StaffFolder?
+  complains        Feedback[]       @relation("staff")
+  feedbacks        Feedback[]       @relation("admin")
+}
+
+model Session {
+  id             String @id @unique @default(uuid())
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  user           User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model Key {
+  id              String  @id @unique @default(uuid())
+  hashed_password String?
+  user_id         String
+  user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model Screening {
+  id           String           @id @unique @default(uuid())
+  title        String           @unique
+  description  String?
+  requirements String
+  deadline     DateTime
+  entries      ScreeningEntry[]
+  createdAt    DateTime         @default(now())
+}
+
+model ScreeningEntry {
+  id            String    @id @unique @default(uuid())
+  staff         User      @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  staffId       String
+  status        String?   @default("pending")
+  message       String?
+  screening     Screening @relation(fields: [screeningId], references: [id], onDelete: Cascade)
+  screeningId   String
+  uploadedFiles Json
+
+  @@unique([staffId, screeningId])
+}
+
+model Recruitment {
+  id           String                   @id @unique @default(uuid())
+  jobTitle     String                   @unique
+  slug         String                   @unique
+  description  String?
+  requirements String
+  deadline     DateTime
+  applications RecruitmentApplication[]
+  createdAt    DateTime                 @default(now())
+}
+
+model RecruitmentApplication {
+  id            String      @id @unique @default(uuid())
+  name          String
+  email         String
+  phoneNumber   String?     @unique
+  status        String?     @default("pending")
+  message       String?
+  uploadedFiles Json
+  recruitment   Recruitment @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  recruitmentId String
+  createdAt     DateTime    @default(now())
+
+  @@unique([recruitmentId, email])
+}
+
+model Posting {
+  id         String   @id @unique @default(uuid())
+  type       String
+  staff      User     @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  staffId    String
+  lga        String
+  position   String
+  department String?
+  course     String?
+  institute  String
+  message    String
+  createdAt  DateTime @default(now())
+}
+
+model StaffFolder {
+  id        String   @id @unique @default(uuid())
+  staff     User     @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  staffId   String   @unique
+  files     Json
+  createdAt DateTime @default(now())
+}
+
+model Feedback {
+  id        String            @id @unique @default(uuid())
+  staff     User              @relation("staff", fields: [staffId], references: [id], onDelete: Cascade)
+  staffId   String            @unique
+  admin     User              @relation("admin", fields: [adminId], references: [id], onDelete: Cascade)
+  adminId   String
+  messages  FeedbackMessage[]
+  createdAt DateTime          @default(now())
+}
+
+model FeedbackMessage {
+  id         String   @id @unique @default(uuid())
+  senderId   String
+  body       String
+  createdAt  DateTime @default(now())
+  feedback   Feedback @relation(fields: [feedbackId], references: [id])
+  feedbackId String
+}
+
+model ContactMessage {
+  id          String   @id @unique @default(uuid())
+  name        String
+  phoneNumber String
+  email       String
+  body        String
+  reply       String?  @default("")
+  createdAt   DateTime @default(now())
+}
+
+model Announcement {
+  id        String   @id @unique @default(uuid())
+  title     String   @unique
+  slug      String   @unique
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model News {
+  id        String   @id @unique @default(uuid())
+  title     String   @unique
+  slug      String   @unique
+  content   String
+  summary   String
+  imgUrl    String
+  createdAt DateTime @default(now())
+}
+
+model StaffProfile {
+  id        String   @id @unique @default(uuid())
+  name      String
+  position  String
+  imgUrl    String
+  createdAt DateTime @default(now())
+}
+
+model PageContent {
+  id             String @id @unique @default(uuid())
+  heroSlider     Json?
+  gallery        Json?
+  welcomeAddress Json?
+  ourGoals       Json?
+  statsCount     Json?
+}

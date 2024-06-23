@@ -1,0 +1,48 @@
+@import "./formkit.css";
+
+:root {
+  --dashboard-top-bar-height: 70px;
+  --page-header-height: 100px;
+  --page-header-height-sm: 80px;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  --uno: "bg-base-200";
+}
+
+.layout-enter-active,
+.page-enter-active {
+  transition: all 0.1s ease-out;
+}
+
+.layout-leave-active,
+.page-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.layout-enter-from,
+.layout-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
+}
+
+.page-enter-from,
+.page-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+/* fade animation */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}

@@ -1,0 +1,56 @@
+.formkit {
+  --uno: "c-content-200";
+}
+
+.formkit-outer {
+  --uno: "w-full space-y-3";
+}
+
+.formkit-wrapper {
+  --uno: "space-y-2";
+}
+
+.formkit-label {
+  --uno: "text-xs block font-semibold";
+}
+
+.formkit-inner {
+  --uno: "outline-none";
+}
+
+.formkit-input:not([type="submit"], textarea) {
+  --uno: "w-full h-13 px-3 rounded-md text-xs bordered bg-accent/5 focus:accent-outline";
+}
+
+.formkit-wrapper textarea {
+  --uno: "w-full p-3 rounded-md text-xs bordered bg-accent/5 focus:accent-outline";
+}
+
+.formkit-input[type="submit"] {
+  --uno: "h-10 text-xs bg-accent-200 font-semibold c-white focus:accent-outline rounded";
+}
+
+.formkit-help {
+  --uno: "text-xs font-medium text-content-100";
+}
+
+.formkit-message {
+  --uno: "text-xxs font-medium text-red-400";
+}
+
+.formkit-form > .formkit-messages {
+  --uno: "mt-6 text-center";
+}
+
+.formkit-form > .formkit-actions {
+  --uno: "mt-6 flex-center";
+}
+
+.formkit-actions .formkit-wrapper {
+  --uno: "flex-center";
+}
+
+.formkit-file-list,
+.formkit-no-files {
+  --uno: "hidden";
+}
