@@ -51,19 +51,19 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    prerender: {
-      routes: ["/", "/login", "/about-us", "/contacts", "/maintenance"]
-    },
+    // prerender: {
+    //   routes: ["/", "/login", "/about-us", "/contacts", "/maintenance"]
+    // },
     preset: "netlify"
   },
 
-  routeRules: {
-    "/": { prerender: true },
-    "/admin": { ssr: false },
-    "/staff": { ssr: false },
-    "/news": { swr: true },
-    "/announcements": { swr: true }
-  },
+  // routeRules: {
+  //   "/": { prerender: true },
+  //   "/admin": { ssr: false },
+  //   "/staff": { ssr: false },
+  //   "/news": { swr: true },
+  //   "/announcements": { swr: true }
+  // },
 
 
 
