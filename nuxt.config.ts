@@ -65,6 +65,8 @@ export default defineNuxtConfig({
     "/announcements": { swr: true }
   },
 
+
+
   runtimeConfig: {
     superAdminEmail: process.env.SUPER_ADMIN_EMAIL,
     superAdminPassword: process.env.SUPER_ADMIN_PASSWORD,

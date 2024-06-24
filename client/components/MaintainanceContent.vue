@@ -1,5 +1,3 @@
-<script lang="ts" setup></script>
-
 <template>
   <Page title="This page is under maintainance">
     <div w="80vw md:50vw" h="screen" text="center" mx="auto" flex="col center gap-5">
