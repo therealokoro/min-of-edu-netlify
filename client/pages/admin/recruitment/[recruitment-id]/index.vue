@@ -6,25 +6,36 @@
   const editRecruitment = ref(false)
   const deleteRecruitment = ref(false)
   const { RecruitmentInfo } = useFormSchemas()
-  const currRecruitment = ref<any>(null)
 
-  const { data: snInfo, refresh } = await useAsyncData(
-    "curr-recruitment",
-    async () => {
-      const sn = await $fetch<IRecruitment | null>(`/api/recruitment/${id}`)
-      currRecruitment.value = { ...sn, deadline: String(sn!.deadline) }
-      if (!sn) return null
+  const { data, refresh, pending } = useAsyncData("curr-recruitment", () => {
+    return $fetch<IRecruitment | null>(`/api/recruitment/${id}`)
+  })
 
-      return {
-        jobTitle: sn.jobTitle,
-        // description: sn.description,
-        "Created At": useDateFormat(sn.createdAt, "MMMM DD, YYYY").value,
-        deadline: useDateFormat(sn.deadline, "MMMM DD, YYYY").value,
-        requirements: sn.requirements.split("|"),
-        status: isDateExpired(sn.deadline) ? "closed" : "inProgress"
-      }
+  const currRecruitment = computed<any>(() => {
+    return data.value
+      ? { ...data.value, deadline: String(data.value.deadline) }
+      : null
+  })
+
+  const applications = computed(() => {
+    const list = currRecruitment.value ? currRecruitment.value.applications : []
+    return list.map((curr: any, i: any) => ({
+      ...curr,
+      sn: i + 1,
+      createdAt: useDateFormat(curr.createdAt, "MMMM DD, YYYY").value
+    }))
+  })
+
+  const snInfo = computed(() => {
+    if (!data.value) return {}
+    return {
+      jobTitle: data.value.jobTitle,
+      "Created At": useDateFormat(data.value.createdAt, "MMMM DD, YYYY").value,
+      deadline: useDateFormat(data.value.deadline, "MMMM DD, YYYY").value,
+      requirements: data.value.requirements.split("|"),
+      status: isDateExpired(data.value.deadline) ? "closed" : "inProgress"
     }
-  )
+  })
 
   const editorContent = ref("")
   async function handleEditRecruitment(data: any) {
@@ -79,8 +90,8 @@
           <dd text="sm" font="medium" leading="6" col="span-2">
             <UiBadge
               v-if="label == 'status'"
-              :color="getBadgeStyling(snInfo!.status).color"
-              :label="getBadgeStyling(snInfo!.status).text"
+              :color="getBadgeStyling(String(snInfo.status)).color"
+              :label="getBadgeStyling(String(snInfo.status)).text"
               :ui="{ rounded: 'rounded-full' }"
               size="xs"
             />
@@ -109,7 +120,7 @@
     </DashboardContentBlock>
 
     <DashboardContentBlock>
-      <RecruitmentApplications />
+      <LazyRecruitmentApplications :loading="pending" :data="applications" />
     </DashboardContentBlock>
 
     <BaseDialog

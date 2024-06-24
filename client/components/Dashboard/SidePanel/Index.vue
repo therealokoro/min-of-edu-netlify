@@ -15,8 +15,11 @@
     flex="~ col gap-10"
     bg="accent"
   >
-    <nuxt-link to="/">
-      <NuxtImg placeholder src="/logo-alt.svg" w="280px" />
+    <nuxt-link block p="1" bg="white/60" rounded="md" to="/">
+      <nuxt-img
+        alt="Kebbi Ministry for Basic and Secondary Education Logo"
+        src="/logo.png"
+      />
     </nuxt-link>
 
     <!-- Navigation -->

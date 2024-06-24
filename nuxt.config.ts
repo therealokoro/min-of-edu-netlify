@@ -7,7 +7,6 @@ const meta = {
 }
 
 export default defineNuxtConfig({
-  // ssr: false,
   srcDir: "./client",
   serverDir: "./server",
   devtools: { enabled: true },
@@ -59,7 +58,6 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // "/e-recruitment/**": { redirect: "/maintenance" },
     "/": { prerender: true },
     "/admin": { ssr: false },
     "/staff": { ssr: false },
@@ -82,6 +80,7 @@ export default defineNuxtConfig({
     appId: process.env.STORAGE_APP_ID,
   },
 
+  image: { provider: 'netlify' },
   vue: { propsDestructure: true },
   experimental: { typedPages: true, asyncContext: true },
   fontMetrics: { fonts: ["Inter"] },

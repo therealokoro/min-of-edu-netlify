@@ -3,7 +3,6 @@
   import type { IApplication } from "~/types/recruitment.types"
   const appId = useRoute("admin-recruitment-recruitmentid-application").params
     .application
-  const application = useState<any>("curr-application", () => null)
   const uploadedFiles = useState<IUploadedFile[]>(() => [])
 
   const pageTitle = computed(() => {
@@ -12,34 +11,37 @@
   const $toast = usePush()
 
   const {
-    data: appInfo,
+    data: application,
     pending,
     refresh
-  } = await useAsyncData(`application-${appId}`, async () => {
-    const info = await $fetch<IApplication | null>(
-      `/api/recruitment/applications/${appId}`
-    )
+  } = useAsyncData(`application-${appId}`, () => {
+    return $fetch<IApplication | null>(`/api/recruitment/applications/${appId}`)
+  })
 
-    if (!info) return null
-    application.value = info
-    uploadedFiles.value = info.uploadedFiles.map((curr: any) => ({
+  const appInfo = computed(() => {
+    if (!application.value) return null
+    application.value = application.value
+    uploadedFiles.value = application.value.uploadedFiles.map((curr: any) => ({
       ...curr,
       name: curr.requirement
     }))
 
     return {
-      "Job Title": info.recruitment?.jobTitle,
-      "Applicant Name": info.name,
-      "Email Address": info.email,
-      "Phone Number": info.phoneNumber,
-      "Application Date": useDateFormat(info.createdAt, "MMMM DD, YYYY").value,
-      status: info.status
+      "Job Title": application.value.recruitment?.jobTitle,
+      "Applicant Name": application.value.name,
+      "Email Address": application.value.email,
+      "Phone Number": application.value.phoneNumber,
+      "Application Date": useDateFormat(
+        application.value.createdAt,
+        "MMMM DD, YYYY"
+      ).value,
+      status: application.value.status
     }
   })
 
   const responseModal = ref(false)
   const responseList = ["approved", "pending", "declined"]
-  const response = ref(application.value.status)
+  const response = ref(application.value?.status)
 
   const getResponseConfig = (status: string) => {
     const config: Record<string, string> = {
@@ -64,7 +66,7 @@
       responseModal.value = false
       refresh()
     } catch (e: any) {
-      toast.reject(e.data.message)
+      toast.reject(e.application.message)
     }
   }
 </script>

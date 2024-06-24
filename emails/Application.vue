@@ -22,7 +22,7 @@
 
     <EText>{{ content }}</EText>
 
-    <EText>Regards,</EText>
+    <EText>Regards</EText>
     <EText style="font-weight: bold">HR Team</EText>
     <EText>Kebbi Ministry for Basic & Secondary Education</EText>
   </EHtml>

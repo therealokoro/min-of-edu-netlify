@@ -4,11 +4,11 @@
   const $toast = usePush()
   const editorContent = ref('')
 
-  const {
+  const { 
     data: recruitmentList,
     refresh,
     pending
-  } = await useAsyncData("staff-list", async () => {
+  } = useLazyAsyncData("staff-list", async () => {
     const list = await $fetch("/api/recruitment/list")
     return list.map((item: any, i: any) => ({
       ...item,

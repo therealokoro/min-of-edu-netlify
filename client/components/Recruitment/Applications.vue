@@ -1,19 +1,7 @@
 <script setup lang="ts">
+  import type { IApplication } from "~/types/recruitment.types"
   const rId = useRoute("admin-recruitment-recruitmentid").params.recruitmentid
-
-  const { data, pending } = await useLazyAsyncData(
-    "recruitment-applications",
-    async () => {
-      const list = await $fetch(`/api/recruitment/applications/list?id=${rId}`)
-      if (!list) return []
-
-      return list.map((ap, i) => ({
-        ...ap,
-        sn: i + 1,
-        createdAt: useDateFormat(ap.createdAt, "MMMM DD, YYYY").value
-      }))
-    }
-  )
+  const props = defineProps<{ loading: boolean; data: IApplication[] }>()
 
   const columns = [
     {
@@ -46,11 +34,11 @@
   const page = ref(1)
   const pageCount = ref(20)
   const q = ref("")
-  
+
   const rows = computed(() => {
     let list: any = []
     if (q.value) {
-      list = data.value!.filter((curr) => {
+      list = props.data.filter((curr) => {
         return Object.values(curr).some((value) => {
           return String(value).toLowerCase().includes(q.value.toLowerCase())
         })
@@ -62,29 +50,42 @@
           (page.value - 1) * pageCount.value,
           page.value * pageCount.value
         )
-      : data.value
+      : props.data
   })
 </script>
 
 <template>
-  <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-    <UiInput v-model="q" placeholder="Filter through the list..." />
-  </div>
-  <UiTable :loading="pending" :columns="columns" :rows="rows">
-    <template #actions-data="{ row }">
-      <div>
-        <ui-button size="2xs" :to="`/admin/recruitment/${rId}/${row.id}`">
-          Open
-        </ui-button>
-      </div>
-    </template>
-  </UiTable>
-  <div w="full" flex="~ items-center justify-end" my="3">
-    <UiPagination
-      :max="5"
-      v-model="page"
-      :page-count="pageCount"
-      :total="data?.length"
-    />
+  <div w="full">
+    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+      <UiInput v-model="q" placeholder="Search for an applicant" />
+    </div>
+
+    <UiTable :loading="loading" :columns="columns" :rows="rows">
+      <template #actions-data="{ row }">
+        <div>
+          <ui-button size="2xs" :to="`/admin/recruitment/${rId}/${row.id}`">
+            Open
+          </ui-button>
+        </div>
+      </template>
+
+      <template #status-data="{ row }">
+        <UiBadge
+          :color="getBadgeStyling(row.status).color"
+          :label="getBadgeStyling(row.status).text"
+          :ui="{ rounded: 'rounded-full' }"
+          size="xs"
+        />
+      </template>
+    </UiTable>
+
+    <div w="full" flex="~ items-center justify-end" my="3">
+      <UiPagination
+        :max="5"
+        v-model="page"
+        :page-count="pageCount"
+        :total="data?.length"
+      />
+    </div>
   </div>
 </template>
