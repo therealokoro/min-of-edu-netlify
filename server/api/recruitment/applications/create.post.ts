@@ -16,7 +16,13 @@ export default defineEventHandler(async (e) => {
 
   // check if staff has submitted his/her entry
   const isExists = await db.recruitmentApplication.findFirst({
-    where: { recruitmentId: id.toString(), email: email.toString() }
+    where: {
+      recruitmentId: id.toString(),
+      OR: [
+        { email: email.toString() },
+        { phoneNumber: phoneNumber?.toString() }
+      ]
+    }
   })
   if (isExists) throw createError("You have already applied for this job")
 
