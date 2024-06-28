@@ -3,7 +3,7 @@
   const $toast = usePush()
   const slug = useRoute("e-recruitment-slug").params.slug
 
-  const { data: rn } = await useAsyncData(`r-${slug}`, async () => {
+  const { data: rn } = useAsyncData(`r-${slug}`, async () => {
     const res = await $fetch<IRecruitment>(`/api/recruitment/slug/${slug}`)
 
     return {

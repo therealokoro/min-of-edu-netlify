@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-  const { data: recruitmentList } = await useAsyncData(async () => {
+  const { data: recruitmentList } = useAsyncData(async () => {
     const list = await $fetch("/api/recruitment/list")
     return list.map((item: any, i: any) => ({
       ...item,
       sn: i + 1,
+      isDeadline: item.deadline < new Date(),
       createdAt: useDateFormat(item.createdAt, "MMMM DD, YYYY").value
     }))
   })
@@ -29,18 +30,29 @@
       </div>
 
       <div v-else w="full" grid="~ cols-1 md:cols-2 gap-5">
-        <nuxt-link
-          v-for="item in recruitmentList"
-          :to="`/e-recruitment/${item.slug}`"
-          bg="accent/4 hover:accent/10"
-          flex="~ col gap-2"
-          rounded="lg"
-          bordered
-          p="4"
-        >
-          <h3 text="base" font="bold">{{ item.jobTitle }}</h3>
-          <p text="xs accent">Posted on {{ item.createdAt }}</p>
-        </nuxt-link>
+        <div relative v-for="item in recruitmentList">
+          <div
+            absolute
+            inset="0"
+            bg="gray/90"
+            flex="center"
+            text="center white"
+            z="10"
+          >
+            <p font="bold">This recruitment is closed</p>
+          </div>
+          <nuxt-link
+            :to="`/e-recruitment/${item.slug}`"
+            bg="accent/4 hover:accent/10"
+            flex="~ col gap-2"
+            rounded="lg"
+            bordered
+            p="4"
+          >
+            <h3 text="base" font="bold">{{ item.jobTitle }}</h3>
+            <p text="xs accent">Posted on {{ item.createdAt }}</p>
+          </nuxt-link>
+        </div>
       </div>
     </PageSection>
   </Page>
