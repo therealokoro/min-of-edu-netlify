@@ -6,6 +6,8 @@ export default defineEventHandler(async (e) => {
     limit?: number
   }>(e)
 
+  console.log(query)
+
   if (!query.id) {
     throw createError({
       statusMessage: "Invalid request, please provide all necessary fields",
@@ -22,8 +24,8 @@ export default defineEventHandler(async (e) => {
     where: {
       recruitmentId: recruitment?.id,
       OR: [
-        { name: { contains: query.search } },
-        { email: { contains: query.search } }
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { email: { contains: query.search, mode: 'insensitive' } }
       ]
     },
     skip: (Number(query.page) - 1) * Number(query.limit),

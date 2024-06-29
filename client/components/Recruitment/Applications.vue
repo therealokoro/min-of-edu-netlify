@@ -55,7 +55,11 @@
   const totalDataCount = computed(() => data.value?.count || 0)
   const applications = computed(() => data.value?.data || [])
 
-  watch([page, searchValue], () => refresh())
+  watch(page, () => refresh())
+  watchDebounced(searchValue, () => refresh(), {
+    debounce: 1000,
+    maxWait: 1000
+  })
 </script>
 
 <template>
@@ -81,6 +85,12 @@
           size="xs"
         />
       </template> -->
+
+      <template #createdAt-data="{ row }">
+        <p>
+          {{ useDateFormat(row.createdAt, "MMMM DD, YYYY").value }}
+        </p>
+      </template>
     </UiTable>
 
     <div w="full" flex="~ items-center justify-end gap-10" my="3">
