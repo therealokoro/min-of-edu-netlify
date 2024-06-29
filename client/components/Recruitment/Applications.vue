@@ -75,8 +75,8 @@
 
       <template #status-data="{ row }">
         <UiBadge
-          :color="getBadgeStyling(row.status).color"
-          :label="getBadgeStyling(row.status).text"
+          :color="getBadgeStyling(row.status)?.color"
+          :label="getBadgeStyling(row.status)?.text"
           :ui="{ rounded: 'rounded-full' }"
           size="xs"
         />

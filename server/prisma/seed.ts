@@ -155,7 +155,7 @@ async function seedPageContent() {
 async function main() {
   console.log("start database seeding...")
   await seedSuperAdmin()
-  await seedRecruitments()
+  // await seedRecruitments()
   await seedPageContent()
 }
 
