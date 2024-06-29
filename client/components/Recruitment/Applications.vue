@@ -73,14 +73,14 @@
         </div>
       </template>
 
-      <template #status-data="{ row }">
+      <!-- <template #status-data="{ row }">
         <UiBadge
           :color="getBadgeStyling(row.status)?.color"
           :label="getBadgeStyling(row.status)?.text"
           :ui="{ rounded: 'rounded-full' }"
           size="xs"
         />
-      </template>
+      </template> -->
     </UiTable>
 
     <div w="full" flex="~ items-center justify-end gap-10" my="3">
