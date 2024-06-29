@@ -7,7 +7,7 @@
   const deleteRecruitment = ref(false)
   const { RecruitmentInfo } = useFormSchemas()
 
-  const { data, refresh, pending } = useAsyncData("curr-recruitment", () => {
+  const { data, refresh } = useAsyncData("curr-recruitment", () => {
     return $fetch<IRecruitment | null>(`/api/recruitment/${id}`)
   })
 
@@ -15,15 +15,6 @@
     return data.value
       ? { ...data.value, deadline: String(data.value.deadline) }
       : null
-  })
-
-  const applications = computed(() => {
-    const list = currRecruitment.value ? currRecruitment.value.applications : []
-    return list.map((curr: any, i: any) => ({
-      ...curr,
-      sn: i + 1,
-      createdAt: useDateFormat(curr.createdAt, "MMMM DD, YYYY").value
-    }))
   })
 
   const snInfo = computed(() => {
@@ -120,7 +111,7 @@
     </DashboardContentBlock>
 
     <DashboardContentBlock>
-      <LazyRecruitmentApplications :loading="pending" :data="applications" />
+      <LazyRecruitmentApplications />
     </DashboardContentBlock>
 
     <BaseDialog

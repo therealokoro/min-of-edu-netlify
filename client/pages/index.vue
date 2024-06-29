@@ -6,7 +6,7 @@
   const isMobile = computed(() => bk.isSmaller("md"))
   const showFullWelcomeMsg = ref(isMobile.value ? false : true)
 
-  const { data: c } = await useFetch("/api/content/get")
+  const { data: c } = useFetch("/api/content/get")
   const address = computed(() => c.value?.welcomeAddress as IWelcomeAddress)
   // const stats = computed(() => c.value?.statsCount)
 </script>

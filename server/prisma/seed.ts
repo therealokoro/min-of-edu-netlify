@@ -23,6 +23,41 @@ async function seedSuperAdmin() {
   }
 }
 
+async function seedRecruitments() {
+  const jobTitle = "Seeded Recruitment"
+  const exists = await prisma.recruitment.findFirst({ where: { jobTitle } })
+  let id = exists?.id || ""
+
+  if (!exists) {
+    const recruitment = await prisma.recruitment.create({
+      data: {
+        jobTitle,
+        requirements: "This one|That one",
+        slug: "seeded-recruitment",
+        description: "Seeded for test purposes",
+        deadline: "2024-07-14T15:59:14.910Z"
+      }
+    })
+    id = recruitment.id
+  }
+
+  for (let i = 0; i < 50; i++) {
+    await prisma.recruitmentApplication.create({
+      data: {
+        email: `user-id${i}@mail.com`,
+        name: `User ${i}`,
+        uploadedFiles: [
+          { id: "this-one", url: null, requirement: "This one" },
+          { id: "that-one", url: null, requirement: "That one" }
+        ],
+        recruitmentId: id
+      }
+    })
+  }
+
+  console.log("Created recruitment and recruitment applications")
+}
+
 async function seedPageContent() {
   console.log("Start seeding page content...")
   const slides = [
@@ -120,6 +155,7 @@ async function seedPageContent() {
 async function main() {
   console.log("start database seeding...")
   await seedSuperAdmin()
+  await seedRecruitments()
   await seedPageContent()
 }
 

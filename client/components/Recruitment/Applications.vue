@@ -1,13 +1,17 @@
 <script setup lang="ts">
   import type { IApplication } from "~/types/recruitment.types"
   const rId = useRoute("admin-recruitment-recruitmentid").params.recruitmentid
-  const props = defineProps<{ loading: boolean; data: IApplication[] }>()
+
+  type Data = {
+    data: IApplication[]
+    count: number
+  }
 
   const columns = [
-    {
-      key: "sn",
-      label: "ID"
-    },
+    // {
+    //   key: "sn",
+    //   label: "ID"
+    // },
     {
       key: "name",
       label: "Applicant Name"
@@ -32,35 +36,35 @@
   ]
 
   const page = ref(1)
-  const pageCount = ref(20)
-  const q = ref("")
+  const pageCount = ref(10)
+  const searchValue = ref("")
 
-  const rows = computed(() => {
-    let list: any = []
-    if (q.value) {
-      list = props.data.filter((curr) => {
-        return Object.values(curr).some((value) => {
-          return String(value).toLowerCase().includes(q.value.toLowerCase())
-        })
-      })
-    }
-
-    return list.length > 0
-      ? list.slice(
-          (page.value - 1) * pageCount.value,
-          page.value * pageCount.value
-        )
-      : props.data
+  const url = "/api/recruitment/applications/list"
+  // @ts-expect-error
+  const { data, pending, refresh } = await useLazyAsyncData<Data>(() => {
+    return ($fetch as any)(url, {
+      query: {
+        id: rId,
+        search: searchValue.value,
+        limit: pageCount.value,
+        page: page.value
+      }
+    })
   })
+
+  const totalDataCount = computed(() => data.value?.count || 0)
+  const applications = computed(() => data.value?.data || [])
+
+  watch([page, searchValue], () => refresh())
 </script>
 
 <template>
   <div w="full">
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UiInput v-model="q" placeholder="Search for an applicant" />
+      <UiInput v-model="searchValue" placeholder="Search for an applicant" />
     </div>
 
-    <UiTable :loading="loading" :columns="columns" :rows="rows">
+    <UiTable :loading="pending" :columns="columns" :rows="applications">
       <template #actions-data="{ row }">
         <div>
           <ui-button size="2xs" :to="`/admin/recruitment/${rId}/${row.id}`">
@@ -79,12 +83,15 @@
       </template>
     </UiTable>
 
-    <div w="full" flex="~ items-center justify-end" my="3">
+    <div w="full" flex="~ items-center justify-end gap-10" my="3">
+      <p text="xs" font="bold">
+        Total Number of Applications: {{ totalDataCount }}
+      </p>
       <UiPagination
-        :max="5"
         v-model="page"
         :page-count="pageCount"
-        :total="data?.length"
+        :total="totalDataCount"
+        :max="7"
       />
     </div>
   </div>

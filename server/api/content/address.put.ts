@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
   const file = fd.get("file") as File
 
   try {
-    const path = `welcome/address.jpg`
+    const path = `/welcome/address.jpg`
     const imgUrl = await uploadFileToStorage(path, file)
 
     const pageContent = await db.pageContent.findFirst()

@@ -13,8 +13,7 @@ export default defineEventHandler(async (e) => {
     query.slug && Boolean(query.slug) ? { slug: query.slug.toString() } : { id }
 
   const data = await db.recruitment.findUnique({
-    where: { ...whereObj },
-    include: { applications: true }
+    where: { ...whereObj }
   })
   return data
 })
