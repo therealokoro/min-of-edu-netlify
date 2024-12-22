@@ -6,8 +6,6 @@ export default defineEventHandler(async (e) => {
     limit?: number
   }>(e)
 
-  console.log(query)
-
   if (!query.id) {
     throw createError({
       statusMessage: "Invalid request, please provide all necessary fields",
