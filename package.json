@@ -7,7 +7,7 @@
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare && pnpm db:push",
+    "postinstall": "nuxt prepare",
     "db:generate": "npx prisma generate --schema ./server/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema ./server/prisma/schema.prisma && pnpm db:generate && pnpm db:seed",
     "db:seed": "npx prisma db seed --schema ./server/prisma/schema.prisma",
