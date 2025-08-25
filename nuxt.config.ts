@@ -53,6 +53,8 @@ export default defineNuxtConfig({
     }
   },
 
+  extend: ["./layers/ui"],
+
   $production: {
     image: { provider: 'netlify' },
     nitro: { preset: "netlify" }
