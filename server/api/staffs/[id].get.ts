@@ -8,6 +8,6 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const staffs = await db.user.findUnique({ where: { id } })
+  const staffs = await prisma.user.findUnique({ where: { id } })
   return staffs
 })

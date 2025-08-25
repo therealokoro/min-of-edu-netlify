@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.recruitmentApplication.findMany({
+  const data = await prisma.recruitmentApplication.findMany({
     where: { email: String(query.email) },
     include: { recruitment: true }
   })

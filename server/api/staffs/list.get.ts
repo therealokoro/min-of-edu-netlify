@@ -3,7 +3,7 @@ export default defineEventHandler(async (e) => {
 
   const queryObj = query.all ? {} : { role: "Staff" }
 
-  const staffs = await db.user.findMany({
+  const staffs = await prisma.user.findMany({
     where: { ...queryObj },
     orderBy: { createdAt: "desc" }
   })

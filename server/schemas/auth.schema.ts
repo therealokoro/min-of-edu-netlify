@@ -1,8 +1,7 @@
 import * as v from "valibot"
 
 export const UpsertUserSchema = v.object({
-  surname: v.string("Please provide a surname for the staff"),
-  firstname: v.string("Please provide a firstname for the staff"),
+  name: v.string("Please provide a name for the staff"),
   phoneNumber: v.string("Please provide a phone number for the staff"),
   lastname: v.optional(v.string()),
   role: v.string("Please provide a role for staff"),

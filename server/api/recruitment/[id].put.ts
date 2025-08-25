@@ -13,7 +13,7 @@ export default defineEventHandler(async (e) => {
       })
     }
 
-    const data = await db.recruitment.update({
+    const data = await prisma.recruitment.update({
       where: { id },
       data: {
         ...body,

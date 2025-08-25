@@ -9,7 +9,7 @@ export default defineEventHandler(async (e) => {
   }
 
   // delete the folder first
-  const folder = await db.staffFolder.findUnique({ where: { staffId: id } })
+  const folder = await prisma.staffFolder.findUnique({ where: { staffId: id } })
   if (folder) await $fetch("/api/folder/" + folder.id, { method: "DELETE" })
-  return await db.user.delete({ where: { id } })
+  return await prisma.user.delete({ where: { id } })
 })

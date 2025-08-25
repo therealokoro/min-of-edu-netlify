@@ -7,18 +7,15 @@ const meta = {
 }
 
 export default defineNuxtConfig({
-  srcDir: "./client",
-  serverDir: "./server",
+  compatibilityDate: "latest",
   devtools: { enabled: true },
 
   css: [
     "notivue/animations.css",
-    "@unocss/reset/tailwind-compat.css",
+    // "@unocss/reset/tailwind-compat.css",
     "~/assets/styles/app.css",
     "~/assets/styles/prose.css"
   ],
-
-  extends: ["./ui-layer"],
 
   modules: [
     "@nuxt/devtools",
@@ -28,8 +25,8 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@pinia/nuxt",
     "notivue/nuxt",
-    "nuxt-tiptap-editor",
-    "@vue-email/nuxt"
+    "nuxt-tiptap-editor"
+    // "@vue-email/nuxt"
   ],
 
   app: {
@@ -53,8 +50,12 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ["/", "/login", "/about-us", "/contacts", "/maintenance"]
-    },
-    preset: "netlify"
+    }
+  },
+
+  $production: {
+    image: { provider: 'netlify' },
+    nitro: { preset: "netlify" }
   },
 
   routeRules: {
@@ -80,10 +81,8 @@ export default defineNuxtConfig({
     appId: process.env.STORAGE_APP_ID,
   },
 
-  image: { provider: 'netlify' },
-  vue: { propsDestructure: true },
   experimental: { typedPages: true, asyncContext: true },
   fontMetrics: { fonts: ["Inter"] },
   features: { inlineStyles: false },
-  vueEmail: { autoImport: true }
+  // vueEmail: { autoImport: true }
 })

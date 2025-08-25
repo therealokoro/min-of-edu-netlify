@@ -1,5 +1,5 @@
 import { H3Error } from "h3"
-import { Prisma } from "@prisma/client"
+import { Prisma } from "../prisma/generated/client"
 
 type Messages = {
   duplicate?: string

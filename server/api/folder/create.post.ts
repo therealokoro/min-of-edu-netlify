@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
   }
 
   try {
-    return await db.staffFolder.create({
+    return await prisma.staffFolder.create({
       data: { staffId: body.staffId, files: [] }
     })
   } catch (e: any) {

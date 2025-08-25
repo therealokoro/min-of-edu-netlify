@@ -4,7 +4,7 @@ import { UpsertRecruitmentSchema } from "~~/server/schemas/recruitment.schema"
 export default defineEventHandler(async (e) => {
   try {
     const body = parse(UpsertRecruitmentSchema, await readBody(e))
-    const data = await db.recruitment.create({
+    const data = await prisma.recruitment.create({
       data: {
         ...body,
         requirements: body.requirements.join("|"),

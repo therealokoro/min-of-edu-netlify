@@ -8,6 +8,6 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.screening.delete({ where: { id } })
+  const data = await prisma.screening.delete({ where: { id } })
   return data
 })

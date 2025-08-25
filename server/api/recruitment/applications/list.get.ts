@@ -2,35 +2,69 @@ export default defineEventHandler(async (e) => {
   const query = getQuery<{
     id: string
     search?: string
-    page?: number
-    limit?: number
+    page?: string | number
+    limit?: string | number
+    sortBy?: string
+    sortOrder?: "asc" | "desc"
   }>(e)
 
+  // Validate required fields
   if (!query.id) {
     throw createError({
-      statusMessage: "Invalid request, please provide all necessary fields",
-      statusCode: 401
+      statusCode: 400,
+      statusMessage: "Invalid request, 'id' is required."
     })
   }
 
-  const recruitment = await db.recruitment.findUnique({
-    where: { id: String(query.id) },
-    include: { _count: { select: { applications: true } } }
+  const page = Number(query.page) > 0 ? Number(query.page) : 1
+  const limit = Number(query.limit) > 0 ? Number(query.limit) : 10
+
+  // Verify recruitment exists
+  const recruitment = await prisma.recruitment.findUnique({
+    where: { id: String(query.id) }
   })
 
-  const applications = await db.recruitmentApplication.findMany({
-    where: {
-      recruitmentId: recruitment?.id,
-      OR: [
-        { name: { contains: query.search, mode: 'insensitive' } },
-        { email: { contains: query.search, mode: 'insensitive' } }
-      ]
-    },
-    skip: (Number(query.page) - 1) * Number(query.limit),
-    take: Number(query.limit),
+  if (!recruitment) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Recruitment not found"
+    })
+  }
+
+  // Build filters
+  const where = {
+    recruitmentId: recruitment.id,
+    ...(query.search
+      ? {
+          OR: [
+            { name: { contains: query.search, mode: "insensitive" } },
+            { email: { contains: query.search, mode: "insensitive" } }
+          ]
+        }
+      : {})
+  }
+
+  // Sorting
+  const sortField = query.sortBy ?? "createdAt"
+  const sortOrder = query.sortOrder ?? "asc"
+
+  // Count applications with filters
+  const count = await prisma.recruitmentApplication.count({ where })
+
+  // Fetch paginated data
+  const applications = await prisma.recruitmentApplication.findMany({
+    where,
+    skip: (page - 1) * limit,
+    take: limit,
     orderBy: {
-      createdAt: "asc"
+      [sortField]: sortOrder
     }
   })
-  return { data: applications, count: recruitment?._count.applications }
+
+  return {
+    data: applications,
+    count,
+    page,
+    limit
+  }
 })

@@ -8,5 +8,5 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  return await db.contactMessage.findUnique({ where: { id } })
+  return await prisma.contactMessage.findUnique({ where: { id } })
 })

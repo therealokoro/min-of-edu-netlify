@@ -3,7 +3,7 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup
 } from "unocss"
@@ -46,7 +46,7 @@ export default defineConfig({
       }
     },
     fontFamily: {
-      main: "Inter Variable, sans-serif"
+      main: "Inter, sans-serif"
     },
     fontSize: {
       xxs: "0.69rem",
@@ -60,7 +60,7 @@ export default defineConfig({
     }
   },
   presets: [
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetIcons(),
     presetTypography()

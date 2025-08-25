@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.screeningEntry.findUnique({
+  const data = await prisma.screeningEntry.findUnique({
     where: { id },
     include: { screening: true, staff: true }
   })

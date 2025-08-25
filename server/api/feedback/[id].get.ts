@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.feedback.findUnique({
+  const data = await prisma.feedback.findUnique({
     where: { id },
     include: { staff: true, admin: true }
   })

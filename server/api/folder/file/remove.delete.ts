@@ -1,5 +1,4 @@
 import { parseFilename } from "ufo"
-import type { IUploadedFile } from "~/types/file.type"
 
 export default defineEventHandler(async (e) => {
   const query = getQuery(e)
@@ -13,7 +12,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const folder = await db.staffFolder.findUnique({ where: { id: folderId } })
+  const folder = await prisma.staffFolder.findUnique({ where: { id: folderId } })
   if (!folder) {
     throw createError({
       statusMessage: "The staff folder you are looking for was not found",
@@ -43,7 +42,7 @@ export default defineEventHandler(async (e) => {
     const newFileList = files.filter((curr: any) => curr.id != fileId)
 
     // update the database with the new file array
-    return await db.staffFolder.update({
+    return await prisma.staffFolder.update({
       where: { id: folder.id },
       data: { files: [...newFileList] }
     })

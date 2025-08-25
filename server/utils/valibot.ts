@@ -1,5 +1,5 @@
 import { H3Event } from "h3"
-import { BaseSchema, flatten, parse, safeParse } from "valibot"
+import { BaseSchema, flatten, safeParse } from "valibot"
 
 export const useValidateBody = async <T>(
   e: H3Event,
