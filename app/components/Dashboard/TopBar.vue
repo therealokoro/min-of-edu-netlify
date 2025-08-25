@@ -18,7 +18,13 @@
       {
         label: "Sign Out",
         icon: "i-tabler-logout",
-        click: () => $auth.signOut()
+        click: () => $auth.signOut({
+          fetchOptions: {
+            onSuccess: () => {
+              navigateTo("/login"); // redirect to login page
+            },
+          },
+        })
       }
     ]
   ]

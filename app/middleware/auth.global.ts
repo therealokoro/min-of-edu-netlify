@@ -1,42 +1,57 @@
+type MiddlewareOptions =
+  | false
+  | {
+      /**
+       * Require a specific role
+       */
+      only?: "admin" | "staff"
+      /**
+       * Allow guests only (redirect logged-in users away)
+       */
+      guest?: boolean
+    }
 
-type MiddlewareOptions = false | {
-  /**
-   * Only apply auth middleware to guest or user
-   */
-  only?: 'admin' | 'staff'
-}
-
-declare module '#app' {
+declare module "#app" {
   interface PageMeta {
     auth?: MiddlewareOptions
   }
 }
 
-declare module 'vue-router' {
+declare module "vue-router" {
   interface RouteMeta {
     auth?: MiddlewareOptions
   }
 }
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  // If auth is disabled, skip middleware
-  const { user, fetchUserObject } = useAuth()
+  const { user, role, initAuth, loading } = useAuth()
 
-  
-  await fetchUserObject()
+  // Initialize session once if needed
+  if (!user && !loading.value) {
+    await initAuth()
+  }
 
-  if (!to.meta?.auth) {
+  const authMeta = to.meta?.auth
+  if (!authMeta) return
+
+  // Guest-only pages (e.g. /login, /register)
+  if (authMeta.guest) {
+    if (user) {
+      return navigateTo(role.value === "Admin" ? "/admin" : "/staff")
+    }
     return
   }
 
-  const { only } = to.meta.auth
-
-  // If guest mode, redirect if authenticated
-  if (only === 'admin' && user?.role != "Admin") {
+  // Protected pages (require login)
+  if (!user) {
     return navigateTo("/login")
   }
 
-  if (only === 'staff' && user?.role != "Staff") {
-    return navigateTo("/login")
+  // Role restrictions
+  if (authMeta.only === "admin" && role.value !== "Admin") {
+    return navigateTo("/staff")
+  }
+  if (authMeta.only === "staff" && role.value !== "Staff") {
+    return navigateTo("/admin")
   }
 })

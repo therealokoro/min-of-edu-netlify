@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { FormKit } from "@formkit/vue"
-  definePageMeta({ layout: "auth" })
+  definePageMeta({ layout: "auth", auth: { guest: true } })
   const $toast = usePush()
   const $auth = useAuth()
 
