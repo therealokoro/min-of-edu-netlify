@@ -1,7 +1,7 @@
 export default defineEventHandler(async (e) => {
   const query = getQuery(e)
 
-  return await db.announcement.findMany({
+  return await prisma.announcement.findMany({
     where: { ...query },
     orderBy: { createdAt: "desc" }
   })

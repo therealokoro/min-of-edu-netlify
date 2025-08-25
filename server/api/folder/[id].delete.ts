@@ -1,6 +1,4 @@
 import { parseFilename } from "ufo"
-import { IUploadedFile } from "~/types/file.type"
-
 export default defineEventHandler(async (e) => {
   const id = getRouterParam(e, "id")
 
@@ -10,7 +8,7 @@ export default defineEventHandler(async (e) => {
       statusCode: 401
     })
   }
-  const folder = await db.staffFolder.findUnique({ where: { id } })
+  const folder = await prisma.staffFolder.findUnique({ where: { id } })
 
   if (!folder) {
     throw createError({
@@ -30,7 +28,7 @@ export default defineEventHandler(async (e) => {
       await deleteFileFromStorage(path)
     }
 
-    const data = await db.staffFolder.delete({ where: { id } })
+    const data = await prisma.staffFolder.delete({ where: { id } })
     return data
   } catch (e: any) {
     throw createError(e)

@@ -11,7 +11,7 @@ export default defineEventHandler(async (e) => {
       throw createError({ statusMessage: "Please provide all required info" })
     }
 
-    return await db.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx) => {
       const data = { name, position, imgUrl }
 
       const profile = id

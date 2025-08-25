@@ -1,7 +1,7 @@
 export default defineEventHandler(async (e) => {
   const query = getQuery(e)
 
-  const data = await db.news.findMany({
+  const data = await prisma.news.findMany({
     where: { ...query },
     orderBy: { createdAt: "desc" }
   })

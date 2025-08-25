@@ -8,6 +8,6 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.feedback.delete({ where: { id } })
+  const data = await prisma.feedback.delete({ where: { id } })
   return data
 })

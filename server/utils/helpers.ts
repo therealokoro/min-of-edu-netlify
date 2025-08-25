@@ -1,14 +1,27 @@
-export const omitProp = <T extends object, K extends keyof T>(
-  obj: T,
-  key: K
-): Omit<T, K> => (({ [key]: _, ...rest }) => rest)(obj)
+import { verify, hash } from "@node-rs/argon2";
+import { H3Event } from 'h3';
+import { lucia } from "../../.backup/lucia"
 
-export const useSlugify = (text: string): string => {
-  return text
-    .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-    .replace(/\-\-+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, "") // Trim - from end of text
+export const hashPassword = async (password: string) => {
+  return await hash(password, {
+		memoryCost: 19456,
+		timeCost: 2,
+		outputLen: 32,
+		parallelism: 1
+	});
+}
+
+export const verifyPassword = async (harsh: string, password: string) => {
+  return await verify(harsh, password, {
+		memoryCost: 19456,
+		timeCost: 2,
+		outputLen: 32,
+		parallelism: 1
+	});
+}
+
+export const createAuthSession = async (event: H3Event, userId: string) => {
+  const session = await lucia.createSession(userId, {});
+	appendHeader(event, "Set-Cookie", lucia.createSessionCookie(session.id).serialize())
+  return session
 }

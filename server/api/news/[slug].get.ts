@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.news.findUnique({ where: { slug } })
+  const data = await prisma.news.findUnique({ where: { slug } })
   if (!data) {
     throw createError({
       statusCode: 404,

@@ -1,5 +1,5 @@
 export default defineEventHandler(async () => {
-  const data = await db.screening.findMany({
+  const data = await prisma.screening.findMany({
     orderBy: { createdAt: "desc" }
   })
   return data

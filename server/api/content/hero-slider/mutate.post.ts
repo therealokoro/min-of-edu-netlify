@@ -1,6 +1,4 @@
-import { IHeroSlide } from "~/types/content.types"
 import { uploadFileToStorage } from "~~/server/utils/firebase"
-
 type Obj = { key: any; [x: string]: any }
 
 function mutateSlide(arr: Obj[], newObj: Obj) {
@@ -24,12 +22,12 @@ export default defineEventHandler(async (e) => {
     const url = await uploadFileToStorage(path, file)
     const meta = { url, key, name, position }
 
-    const pageContent = await db.pageContent.findFirst()
+    const pageContent = await prisma.pageContent.findFirst()
     const currSlides = (pageContent?.heroSlider as IHeroSlide[]) || []
     const newSlideList = mutateSlide(currSlides, meta)
     const queryObj = { heroSlider: [...newSlideList] }
 
-    await db.pageContent.upsert({
+    await prisma.pageContent.upsert({
       where: { id: pageContent?.id || '' },
       create: queryObj,
       update: queryObj

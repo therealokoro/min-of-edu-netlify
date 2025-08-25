@@ -6,7 +6,7 @@ export default defineEventHandler(async (e) => {
       throw createError({ statusMessage: "Please provide all required info" })
     }
 
-    return await db.announcement.upsert({
+    return await prisma.announcement.upsert({
       where: { id: b.id },
       update: { ...b, slug: useSlugify(b.title) },
       create: { body: b.body, title: b.title, slug: useSlugify(b.title) }

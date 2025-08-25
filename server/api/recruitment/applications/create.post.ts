@@ -15,7 +15,7 @@ export default defineEventHandler(async (e) => {
   }
 
   // check if staff has submitted his/her entry
-  const isExists = await db.recruitmentApplication.findFirst({
+  const isExists = await prisma.recruitmentApplication.findFirst({
     where: {
       recruitmentId: id.toString(),
       OR: [
@@ -27,7 +27,7 @@ export default defineEventHandler(async (e) => {
   if (isExists) throw createError("You have already applied for this job")
 
   // check if there's a matching recruitment in the database
-  const recruitment = await db.recruitment.findUnique({
+  const recruitment = await prisma.recruitment.findUnique({
     where: { id: id.toString() }
   })
   if (!recruitment) {
@@ -60,7 +60,7 @@ export default defineEventHandler(async (e) => {
       })
     )
 
-    return await db.recruitmentApplication.create({
+    return await prisma.recruitmentApplication.create({
       data: {
         recruitmentId: id.toString(),
         name: name.toString(),

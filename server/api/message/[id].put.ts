@@ -6,7 +6,7 @@ export default defineEventHandler(async (e) => {
     throw createError({ statusMessage: "Please provide all required info" })
   }
   try {
-    return await db.contactMessage.update({ where: { id }, data: { ...body } })
+    return await prisma.contactMessage.update({ where: { id }, data: { ...body } })
   } catch (e: any) {
     handleErrors(e)
   }

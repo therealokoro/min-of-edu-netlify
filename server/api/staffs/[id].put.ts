@@ -13,13 +13,11 @@ export default defineEventHandler(async (e) => {
       })
     }
 
-    const user = await db.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         email: body.email,
-        surname: body.surname,
-        firstname: body.firstname,
-        lastname: body.lastname,
+        name: body.name,
         phoneNumber: body.phoneNumber
       }
     })

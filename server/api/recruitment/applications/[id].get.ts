@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.recruitmentApplication.findUnique({
+  const data = await prisma.recruitmentApplication.findUnique({
     where: { id },
     include: { recruitment: true }
   })

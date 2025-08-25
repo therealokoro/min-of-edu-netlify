@@ -1,4 +1,3 @@
-import { IUploadedFile } from "~/types/file.type"
 import { uploadFileToStorage } from "~~/server/utils/firebase"
 
 export default defineEventHandler(async (e) => {
@@ -14,7 +13,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const folder = await db.staffFolder.findUnique({
+  const folder = await prisma.staffFolder.findUnique({
     where: { id: String(folderId) }
   })
 
@@ -45,7 +44,7 @@ export default defineEventHandler(async (e) => {
     const metadata = { url, id, name: name.toString() }
 
     // update file list in database
-    return await db.staffFolder.update({
+    return await prisma.staffFolder.update({
       where: { id: folder.id },
       data: { files: [metadata, ...folderFiles] }
     })

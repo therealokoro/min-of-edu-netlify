@@ -1,7 +1,7 @@
 export default defineEventHandler(async (e) => {
   const query = getQuery(e)
 
-  const data = await db.staffFolder.findMany({
+  const data = await prisma.staffFolder.findMany({
     where: { ...query },
     orderBy: { createdAt: "desc" },
     include: { staff: true }

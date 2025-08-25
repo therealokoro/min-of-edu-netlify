@@ -8,5 +8,5 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  return await db.recruitment.findUnique({ where: { slug } })
+  return await prisma.recruitment.findUnique({ where: { slug } })
 })

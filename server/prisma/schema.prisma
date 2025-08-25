@@ -1,5 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider               = "prisma-client"
+  output                 = "./generated/"
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+  previewFeatures        = ["driverAdapters"]
 }
 
 datasource db {
@@ -8,41 +14,73 @@ datasource db {
 }
 
 model User {
-  id               String           @id @unique @default(uuid())
-  email            String           @unique
+  id               String           @id @default(cuid())
+  name             String
+  email            String
   phoneNumber      String
-  surname          String
-  firstname        String
-  lastname         String?
   role             String
-  createdAt        DateTime         @default(now())
   currentPostingId String?
-  auth_session     Session[]
-  key              Key[]
   screeningEntries ScreeningEntry[]
   postingHistory   Posting[]
   staffFolder      StaffFolder?
   complains        Feedback[]       @relation("staff")
   feedbacks        Feedback[]       @relation("admin")
+  emailVerified    Boolean          @default(false)
+  image            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  twoFactorEnabled Boolean          @default(false)
+  Session          Session[]
+  Account          Account[]
+
+  @@unique([email])
+  @@map("user")
 }
 
 model Session {
-  id             String @id @unique @default(uuid())
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  user           User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([user_id])
+  @@map("session")
 }
 
-model Key {
-  id              String  @id @unique @default(uuid())
-  hashed_password String?
-  user_id         String
-  user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+model Account {
+  id           String    @id @default(cuid())
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  @@index([user_id])
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
 }
 
 model Screening {

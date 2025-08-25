@@ -13,7 +13,7 @@ export default defineEventHandler(async (e) => {
       })
     }
 
-    const data = await db.screening.update({
+    const data = await prisma.screening.update({
       where: { id },
       data: { ...body, deadline: new Date(body.deadline) }
     })

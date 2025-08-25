@@ -13,7 +13,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const application = await db.recruitmentApplication.findUnique({
+  const application = await prisma.recruitmentApplication.findUnique({
     where: { id }
   })
 
@@ -31,7 +31,7 @@ export default defineEventHandler(async (e) => {
 
   await sendMail({ to: application.email, name: application.name, content })
 
-  const data = await db.recruitmentApplication.update({
+  const data = await prisma.recruitmentApplication.update({
     where: { id },
     data: { ...body },
     include: { recruitment: true }

@@ -12,7 +12,7 @@ export default defineEventHandler(async (e) => {
       throw createError({ statusMessage: "Please provide all required info" })
     }
 
-    return await db.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx) => {
       const slug = useSlugify(title)
       const data = { title, content, summary, slug, imgUrl }
 

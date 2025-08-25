@@ -8,5 +8,5 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  return await db.contactMessage.delete({ where: { id } })
+  return await prisma.contactMessage.delete({ where: { id } })
 })

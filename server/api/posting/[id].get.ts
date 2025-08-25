@@ -8,7 +8,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.posting.findUnique({
+  const data = await prisma.posting.findUnique({
     where: { id },
     include: { staff: true }
   })

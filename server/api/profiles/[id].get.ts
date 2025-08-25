@@ -8,11 +8,11 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.news.findUnique({ where: { id } })
+  const data = await prisma.staffProfile.findUnique({ where: { id } })
   if (!data) {
     throw createError({
       statusCode: 404,
-      statusMessage: "The news you are looking was not found"
+      statusMessage: "The staff profile you are looking was not found"
     })
   }
 

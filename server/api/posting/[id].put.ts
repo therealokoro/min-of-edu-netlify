@@ -13,7 +13,7 @@ export default defineEventHandler(async (e) => {
       })
     }
 
-    const posting = await db.posting.update({
+    const posting = await prisma.posting.update({
       where: { id },
       data: { ...body }
     })

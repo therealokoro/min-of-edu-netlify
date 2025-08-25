@@ -8,6 +8,6 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const data = await db.announcement.delete({ where: { id } })
+  const data = await prisma.announcement.delete({ where: { id } })
   return data
 })

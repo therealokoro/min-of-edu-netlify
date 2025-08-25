@@ -1,4 +1,4 @@
 export default defineEventHandler(async () => {
-  const data = await db.recruitment.findMany({ orderBy: { createdAt: "desc" } })
+  const data = await prisma.recruitment.findMany({ orderBy: { createdAt: "desc" } })
   return data
 })

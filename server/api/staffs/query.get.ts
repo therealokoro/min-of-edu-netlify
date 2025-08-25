@@ -5,7 +5,7 @@ export default defineEventHandler(async (e) => {
     ? { currentPostingId: { not: null } }
     : { currentPostingId: null }
 
-  const data = await db.user.findMany({
+  const data = await prisma.user.findMany({
     where: { ...queryObj },
     orderBy: { createdAt: "desc" }
   })

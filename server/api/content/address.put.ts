@@ -11,10 +11,10 @@ export default defineEventHandler(async (e) => {
     const path = `/welcome/address.jpg`
     const imgUrl = await uploadFileToStorage(path, file)
 
-    const pageContent = await db.pageContent.findFirst()
+    const pageContent = await prisma.pageContent.findFirst()
     const queryObj = { welcomeAddress: { name, position, imgUrl, body } }
 
-    await db.pageContent.upsert({
+    await prisma.pageContent.upsert({
       where: { id: pageContent?.id || "" },
       create: queryObj,
       update: queryObj

@@ -10,7 +10,7 @@ export default defineEventHandler(async (e) => {
     }
 
     await deleteFileFromStorage(`/staff-profiles/${query.id}.jpg`)
-    return await db.staffProfile.delete({ where: { id: query.id.toString() } })
+    return await prisma.staffProfile.delete({ where: { id: query.id.toString() } })
   } catch (e: any) {
     console.log(e)
     throw createError(e)

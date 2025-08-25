@@ -1,20 +1,24 @@
-import { PrismaClient } from "@prisma/client"
+import { serverAuth } from "../utils/serverAuth"
+import { PrismaClient } from "./generated/client"
+
 const prisma = new PrismaClient()
 
 async function seedSuperAdmin() {
-  const email = process.env.SUPER_ADMIN_EMAIL
-  if (!email) throw Error("Super admin credentials not set")
-
+  const email = String(process.env.SUPER_ADMIN_EMAIL)
+  const password = String(process.env.SUPER_ADMIN_PASSWORD)
+  if (!email || !password) throw Error("Super admin credentials not set")
   const superAdmin = await prisma.user.findUnique({ where: { email } })
+
   if (!superAdmin) {
-    await prisma.user.create({
-      data: {
-        surname: "Super",
-        firstname: "Admin",
+    const auth = serverAuth()
+    await auth.api.signUpEmail({
+      body: {
+        email,
+        password,
+        name: "Super Admin",
+        role: "Admin",
         phoneNumber: "00000000000",
-        email: email,
-        role: "Admin"
-      }
+      },
     })
 
     console.log("Super admin created, end database seeding...")
@@ -23,42 +27,10 @@ async function seedSuperAdmin() {
   }
 }
 
-async function seedRecruitments() {
-  const jobTitle = "Seeded Recruitment"
-  const exists = await prisma.recruitment.findFirst({ where: { jobTitle } })
-  let id = exists?.id || ""
-
-  if (!exists) {
-    const recruitment = await prisma.recruitment.create({
-      data: {
-        jobTitle,
-        requirements: "This one|That one",
-        slug: "seeded-recruitment",
-        description: "Seeded for test purposes",
-        deadline: "2024-07-14T15:59:14.910Z"
-      }
-    })
-    id = recruitment.id
-  }
-
-  for (let i = 0; i < 50; i++) {
-    await prisma.recruitmentApplication.create({
-      data: {
-        email: `user-id${i}@mail.com`,
-        name: `User ${i}`,
-        uploadedFiles: [
-          { id: "this-one", url: null, requirement: "This one" },
-          { id: "that-one", url: null, requirement: "That one" }
-        ],
-        recruitmentId: id
-      }
-    })
-  }
-
-  console.log("Created recruitment and recruitment applications")
-}
-
 async function seedPageContent() {
+  const count = await prisma.pageContent.count()
+  if(count) return false;
+
   console.log("Start seeding page content...")
   const slides = [
     {
@@ -143,12 +115,9 @@ async function seedPageContent() {
     teachers: "87"
   }
 
-  const count = await prisma.pageContent.count()
-  if (!count) {
-    await prisma.pageContent.create({
-      data: { heroSlider: slides, welcomeAddress, statsCount }
-    })
-  }
+  await prisma.pageContent.create({
+    data: { heroSlider: slides, welcomeAddress, statsCount }
+  })
   console.log("End seeding page content...")
 }
 
@@ -159,11 +128,14 @@ async function main() {
   await seedPageContent()
 }
 
-try {
-  await main()
-  await prisma.$disconnect()
-} catch (e: any) {
-  console.error(e)
-  await prisma.$disconnect()
-  process.exit(1)
-}
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+
+

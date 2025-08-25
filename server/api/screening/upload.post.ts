@@ -12,7 +12,7 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const sn = await db.screening.findUnique({
+  const sn = await prisma.screening.findUnique({
     where: { id: String(screeningId) }
   })
 
@@ -49,7 +49,7 @@ export default defineEventHandler(async (e) => {
     )
 
     // check if staff has submitted his/her entry
-    const isExists = await db.screeningEntry.findFirst({
+    const isExists = await prisma.screeningEntry.findFirst({
       where: {
         screeningId: screeningId.toString(),
         staffId: staffId.toString()
@@ -58,7 +58,7 @@ export default defineEventHandler(async (e) => {
 
     // create a new entry if no one was found, else update if found
     if (!isExists) {
-      return await db.screeningEntry.create({
+      return await prisma.screeningEntry.create({
         data: {
           screeningId: screeningId.toString(),
           staffId: staffId.toString(),
@@ -70,7 +70,7 @@ export default defineEventHandler(async (e) => {
         }
       })
     } else {
-      return await db.screeningEntry.update({
+      return await prisma.screeningEntry.update({
         where: { id: isExists.id },
         data: { uploadedFiles: [...fileUrls] },
         include: {
