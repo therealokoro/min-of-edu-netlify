@@ -10,6 +10,7 @@
       await $auth.loginUser({ ...payload })
       toast.resolve("Login Successful")
     } catch (error: any) {
+      console.log(error)
       toast.reject({ message: error })
     }
   }
