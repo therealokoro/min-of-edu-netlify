@@ -28,7 +28,9 @@ function getBaseURL() {
     try {
       baseURL = getRequestURL(useEvent()).origin
     }
-    catch (e) {}
+    catch (e) {
+      console.log(e)
+    }
   }
   return baseURL
 }
