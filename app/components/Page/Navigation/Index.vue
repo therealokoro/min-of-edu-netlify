@@ -1,7 +1,6 @@
 <script lang="ts" setup>
   const showSideBar = ref(false)
-  const nuxt = useNuxtApp()
-  nuxt.hook("page:finish", () => {
+  useNuxtApp().hook("page:start", () => {
     showSideBar.value = false
   })
 
@@ -23,7 +22,7 @@
     </div>
 
     <!-- Mobile Menu Trigger -->
-    <UiSlideover side="left" v-model="showSideBar">
+    <UiSlideover side="left" v-model:open="showSideBar" :ui="{ content: 'max-w-sm' }">
       <ui-button
         md="hidden"
         color="neutral"
