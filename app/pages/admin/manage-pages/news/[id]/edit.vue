@@ -5,7 +5,7 @@
   const $toast = usePush()
   const id = useRoute("admin-manage-pages-news-id-edit").params.id
 
-  const { data: news, error } = await useFetch<News>(`/api/news/${id}`)
+  const { data: news, error } = await useFetch<News>(`/api/news/single?id=${id}`)
 
   const selectedImg = shallowRef<any>(null)
   const objUrl = useObjectUrl(selectedImg) ?? news.value?.imgUrl

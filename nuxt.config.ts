@@ -53,7 +53,7 @@ export default defineNuxtConfig({
     }
   },
 
-  extend: ["./layers/ui"],
+  extends: ["./layers/ui"],
 
   $production: {
     image: { provider: 'netlify' },

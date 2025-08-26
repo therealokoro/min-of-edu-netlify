@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  definePageMeta({ layout: "dashboard" })
+  definePageMeta({ auth: { only: "staff" }, layout: "dashboard" })
 </script>
 
 <template>

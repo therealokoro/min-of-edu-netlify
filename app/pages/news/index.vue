@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-  import type { News } from "@prisma/client"
-  const { data: newsList } = await useFetch<News[]>("/api/news/list")
+  const { data: newsList } = await useFetch<INews[]>("/api/news/list")
   const sliderNews = computed(() => {
     return newsList.value ? newsList.value.splice(0, 4) : []
   })

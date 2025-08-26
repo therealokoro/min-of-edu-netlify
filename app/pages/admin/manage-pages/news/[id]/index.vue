@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import type { News } from "@prisma/client"
   const slug = useRoute("admin-manage-pages-news-id").params.id
   const $toast = usePush()
 
@@ -7,7 +6,7 @@
     data: news,
     pending,
     error
-  } = await useFetch<News>(`/api/news/${slug}`)
+  } = await useFetch<INews>(`/api/news/single?slug=${slug}`)
 
   const pageTitle = computed(() => {
     return !news.value
@@ -45,7 +44,7 @@
 <template>
   <Page :title="pageTitle" :error="error">
     <div w="full">
-      <ui-button @click="deleteModal = true" color="red">Delete News</ui-button>
+      <ui-button @click="deleteModal = true" color="error">Delete News</ui-button>
     </div>
 
     <DashboardContentBlock>

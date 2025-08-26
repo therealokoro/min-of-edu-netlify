@@ -1,18 +1,18 @@
 export default defineEventHandler(async (e) => {
-  const slug = getRouterParam(e, "slug")
+  const query = getQuery(e)
 
-  if (!slug) {
+  if (!query) {
     throw createError({
       statusMessage: "Invalid request, please provide all necessary fields",
       statusCode: 401
     })
   }
 
-  const data = await prisma.news.findUnique({ where: { slug } })
+  const data = await prisma.announcement.findFirst({ where: { ...query } })
   if (!data) {
     throw createError({
       statusCode: 404,
-      statusMessage: "The news you are looking was not found"
+      statusMessage: "The announcement you are looking was not found"
     })
   }
 

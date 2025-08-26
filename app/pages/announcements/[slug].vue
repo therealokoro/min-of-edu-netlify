@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-  import type { Announcement } from "@prisma/client"
-
   const slug = useRoute("announcements-slug").params.slug
-  const { data, error } = await useFetch<Announcement>(
-    `/api/announcement/${slug}`
+  const { data, error } = await useFetch<IAnnouncement>(
+    `/api/announcement/query?slug=${slug}`
   )
 
   const announcement = computed(() => {

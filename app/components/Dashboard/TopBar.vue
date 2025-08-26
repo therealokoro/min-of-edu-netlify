@@ -39,7 +39,7 @@
   >
     <div h="full" class="auto-container" flex="horizontal">
       <!-- Mobile Menu -->
-      <UiSlideover side="left" v-model="isExpanded">
+      <UiSlideover side="left" :ui="{ content: 'max-w-sm' }" v-model="isExpanded">
         <ui-button
           md="hidden"
           color="neutral"
