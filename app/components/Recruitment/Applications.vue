@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { UiButton, UiInput, UiTable, UiPagination } from '#components'
-import type { TableColumn } from '@nuxt/ui'
-import { h } from 'vue'
 
 const route = useRoute("admin-recruitment-recruitmentId")
 const rId = route.params.recruitmentId as string
@@ -18,14 +16,14 @@ const searchValue = ref("")
 const pagination = ref({ pageIndex: 1, pageSize: 10 })
 
 // Columns definition
-const columns: TableColumn<IApplication>[] = [
+const columns = [
   { accessorKey: "name", header: "Applicant Name" },
   { accessorKey: "email", header: "Email Address" },
   { accessorKey: "status", header: "Status" },
   {
     accessorKey: "createdAt",
     header: "Application Date",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
       return new Date(row.original.createdAt).toLocaleString('en-US', {
         day: 'numeric',
         month: 'short',

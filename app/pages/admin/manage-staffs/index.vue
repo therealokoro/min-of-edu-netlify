@@ -18,15 +18,13 @@
     }))
   })
 
-  async function handleSubmit(data: any) {
+  async function handleSubmit(payload: any) {
     const toast = $toast.promise("Creating new staff, please wait")
     try {
-      await $auth.signUp.email({ ...data })
+      await $fetch("/api/staffs/register", { method: "POST", body: payload })
       toast.resolve("New staff was created successfully")
-      refresh()
-      createStaffModal.value = false
-    } catch (e: any) {
-      toast.reject(e.data.message)
+    } catch (error: any) {
+      toast.reject(error.data.message);
     }
   }
 </script>

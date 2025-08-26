@@ -10,6 +10,7 @@ export function serverAuth() {
     baseURL: getBaseURL(),
     emailAndPassword: {
       enabled: true,
+      autoSignIn: false
     },
     user: {
       additionalFields: {

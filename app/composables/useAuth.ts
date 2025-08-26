@@ -35,11 +35,11 @@ export const useAuth = () => {
 
   const role = computed(() => _user.value?.role ?? null)
 
-  async function fetchUserObject() {
+  async function fetchUserObject(id: string) {
     if (_user.value) return _user.value
     try {
       const { data, error } = await useFetch<{ data: IUser }>(
-        "/api/users-auth/current",
+        `/api/users-auth?id=${id}`,
         { headers },
       )
       if (error.value) throw error.value
@@ -59,19 +59,26 @@ export const useAuth = () => {
         _user.value = null
         return null
       }
-      return await fetchUserObject()
+      return await fetchUserObject(session.value.user.id)
     } finally {
       loading.value = false
     }
   }
 
   async function loginUser(payload: { email: string; password: string }) {
-    const { error } = await client.signIn.email(payload)
-    if (error) throw new Error(error.message)
+    try {    
+      const { data } = await $fetch("/api/users-auth/login", {
+        body: { ...payload },
+        method: "POST"
+      })
 
-    const loggedInUser = await fetchUserObject()
-    const redirectPath = loggedInUser?.role === "Admin" ? "/admin" : "/staff"
-    return navigateTo(redirectPath)
+      if(!data) return Promise.reject("Login failed, invalid credentials")
+      _user.value = data as any
+      const redirectPath = data.role === "Admin" ? "/admin" : "/staff"
+      return navigateTo(redirectPath)
+    } catch (error: any) {
+      return Promise.reject(error.data.message)
+    }
   }
 
   async function logoutUser() {

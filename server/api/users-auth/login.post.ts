@@ -2,7 +2,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody<{ email: string; password: string }>(event)
     const auth = serverAuth()
-  
     const { user } = await auth.api.signInEmail({ body })
   
     if(!user){
@@ -10,7 +9,7 @@ export default defineEventHandler(async (event) => {
     }
   
     const userObj = await prisma.user.findUnique({ where: { id: user.id } })
-    return userObj
+    return { data: userObj }
   } catch (error: any) {
     throw createError(error)
   }

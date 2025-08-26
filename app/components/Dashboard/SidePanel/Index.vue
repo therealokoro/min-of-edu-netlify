@@ -1,9 +1,4 @@
 <script lang="ts" setup>
-  const isExpanded = useExpandSideNav()
-  const nuxt = useNuxtApp()
-  nuxt.hook("page:finish", () => {
-    isExpanded.value = false
-  })
 </script>
 
 <template>

@@ -1,28 +1,44 @@
 <script setup lang="ts">
-  const columns = [
+  import { UiButton } from '#components'
+
+  const columns= [
     {
-      key: "sn",
-      label: "S/N"
+      accessorKey: "sn",
+      header: "S/N"
     },
     {
-      key: "name",
-      label: "Name"
+      accessorKey: "name",
+      header: "Name"
     },
     {
-      key: "email",
-      label: "Email"
+      accessorKey: "email",
+      header: "Email"
     },
     {
-      key: "role",
-      label: "Role"
+      accessorKey: "role",
+      header: "Role"
     },
     {
-      key: "createdAt",
-      label: "Date Registered"
+      accessorKey: "createdAt",
+      header: "Date Registered"
     },
     {
-      key: "actions",
-      label: "Actions"
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }: { row: any }) => {
+        return h(
+          UiButton,
+          {
+            color: 'neutral',
+            variant: 'ghost',
+            class: 'ml-auto',
+            onClick: () => {
+              navigateTo(`/admin/manage-staffs/${row.original.id}`)
+            }
+          },
+          { default: () => "View" }
+        )
+      }
     }
   ]
 
@@ -35,17 +51,5 @@
 </script>
 
 <template>
-  <UiTable :columns="columns" :rows="renderList" :loading="loading">
-    <template #actions-data="{ row }">
-      <div>
-        <ui-button
-          size="xs"
-          :to="`/admin/manage-staffs/${row.id}`"
-          variant="ghost"
-        >
-          View
-        </ui-button>
-      </div>
-    </template>
-  </UiTable>
+  <UiTable :columns="columns" :data="renderList" :loading="loading" />
 </template>

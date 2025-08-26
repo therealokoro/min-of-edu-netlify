@@ -123,3 +123,8 @@ export const useActivePageLink = <T extends NavLink>(
 }
 
 export const useExpandSideNav = () => useState("side-panel", () => false)
+export const useSidePanelState = createGlobalState(() => {
+  const isExpanded = ref(false)
+  const closeSidePanel = () => isExpanded.value = false
+  return { isExpanded, closeSidePanel }
+})

@@ -19,7 +19,7 @@ export const useFormSchemas = () => {
       label: "Phone No.",
       name: "phoneNumber",
       placeholder: "Enter staff's phone number here",
-      validation: "length:11"
+      validation: "required|length:11"
     },
     {
       $formkit: "select",

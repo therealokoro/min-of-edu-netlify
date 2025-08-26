@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-  const isExpanded = useExpandSideNav()
   const $auth = useAuth()
   const user = computed(() => $auth.user)
+
+  const isExpanded = ref(false)
+  useNuxtApp().hook("page:start", () => {
+    isExpanded.value = false
+  })
 
   const dropdownOptions = [
     [
@@ -18,13 +22,9 @@
       {
         label: "Sign Out",
         icon: "i-tabler-logout",
-        click: () => $auth.signOut({
-          fetchOptions: {
-            onSuccess: () => {
-              navigateTo("/login"); // redirect to login page
-            },
-          },
-        })
+        onClick: async () => {
+          await $auth.logoutUser()
+        }
       }
     ]
   ]
@@ -39,12 +39,11 @@
   >
     <div h="full" class="auto-container" flex="horizontal">
       <!-- Mobile Menu -->
-      <UiSlideover side="left" :ui="{ content: 'max-w-sm' }" v-model="isExpanded">
+      <UiSlideover side="left" :ui="{ content: 'max-w-sm' }" v-model:open="isExpanded">
         <ui-button
           md="hidden"
           color="neutral"
           size="lg"
-          @click="isExpanded = true"
           icon="i-tabler-menu-2"
         />
 
@@ -64,6 +63,7 @@
                 <img
                   alt="Kebbi Ministry for Basic and Secondary Education Logo"
                   src="/logo.png"
+                  width="200"
                 />
               </nuxt-link>
 
