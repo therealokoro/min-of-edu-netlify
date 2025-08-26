@@ -1,8 +1,12 @@
 // https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
 import { PrismaClient } from '../prisma/generated/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 const prismaClientSingleton = () => {
-  return new PrismaClient()
+  const connectionString = `${process.env.DATABASE_URL}`
+  const adapter = new PrismaPg({ connectionString });
+  const prisma = new PrismaClient({ adapter });
+  return prisma
 }
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
