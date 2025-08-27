@@ -13,7 +13,8 @@ export default defineEventHandler(async (e) => {
     query.slug && Boolean(query.slug) ? { slug: query.slug.toString() } : { id }
 
   const data = await prisma.recruitment.findUnique({
-    where: { ...whereObj }
+    where: { ...whereObj },
+    include: { _count: { select: { applications: true } } }
   })
   return data
 })

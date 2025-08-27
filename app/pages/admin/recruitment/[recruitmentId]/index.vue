@@ -6,10 +6,13 @@
   const deleteRecruitment = ref(false)
   const { RecruitmentInfo } = useFormSchemas()
 
+  type IRecruitmentWithCount = IRecruitment & { _count: { applications: number } }
+
   const { data, refresh } = useAsyncData("curr-recruitment", () => {
-    return $fetch<IRecruitment | null>(`/api/recruitment/${id}`)
+    return $fetch<IRecruitmentWithCount | null>(`/api/recruitment/${id}`)
   })
 
+  const applicationsCount = computed(() => data.value?._count.applications || 0)
   const currRecruitment = computed<any>(() => {
     return data.value
       ? { ...data.value, deadline: String(data.value.deadline) }
@@ -19,11 +22,12 @@
   const snInfo = computed(() => {
     if (!data.value) return {}
     return {
-      jobTitle: data.value.jobTitle,
+      "Job Title": data.value.jobTitle,
       "Created At": useDateFormat(data.value.createdAt, "MMMM DD, YYYY").value,
       deadline: useDateFormat(data.value.deadline, "MMMM DD, YYYY").value,
       requirements: data.value.requirements.split("|"),
-      status: isDateExpired(data.value.deadline) ? "closed" : "inProgress"
+      status: isDateExpired(data.value.deadline) ? "closed" : "inProgress",
+      "Total Applications": applicationsCount.value
     }
   })
 
@@ -58,10 +62,10 @@
 <template>
   <Page title="Recruitment Info" spacing="space-y-7">
     <div w="full" space-x="3">
-      <ui-button size="sm" @click="editRecruitment = true">
+      <ui-button @click="editRecruitment = true">
         Edit Recruitment
       </ui-button>
-      <ui-button size="sm" color="error" @click="deleteRecruitment = true">
+      <ui-button color="error" @click="deleteRecruitment = true">
         Delete Recruitment
       </ui-button>
     </div>
@@ -83,14 +87,12 @@
               :color="getBadgeStyling(String(snInfo.status)).color"
               :label="getBadgeStyling(String(snInfo.status)).text"
               class="rounded-full"
-              size="xs"
             />
             <div v-else-if="label == 'requirements'" space-x="2">
               <UiBadge
                 v-for="item in value"
                 :label="item"
                 class="rounded-md"
-                size="xs"
               />
             </div>
             <span v-else>{{ value }}</span>

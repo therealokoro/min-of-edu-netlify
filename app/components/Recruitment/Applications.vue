@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import { UiButton, UiInput, UiTable, UiPagination } from '#components'
+import { UiButton } from '#components'
 
 const route = useRoute("admin-recruitment-recruitmentId")
 const rId = route.params.recruitmentId as string
 
-type Data = {
-  data: IApplication[]
-  count: number
-  limit: number
-  page: number
-}
-
-const table = useTemplateRef('table')
 const searchValue = ref("")
 const pagination = ref({ pageIndex: 1, pageSize: 10 })
 
@@ -68,7 +60,7 @@ function fetchDataFromServer(){
 const key = computed(() => `applications-${rId}-${pagination.value.pageIndex}`)
 const { data, status, refresh } = await useLazyAsyncData(key, () => fetchDataFromServer())
 
-const totalDataCount = computed(() => data.value?.count ?? 0)
+const queryCount = computed(() => data.value?.queryCount ?? 0)
 const applications = computed(() => data.value?.data ?? [])
 
 // Handle pagination
@@ -96,27 +88,28 @@ watchDebounced(searchValue, () => {
 
     <!-- Table -->
     <UiTable
-      ref="table"
       :loading="status == 'pending'"
       loading-color="primary"
       v-model:pagination="pagination"
       :data="applications"
+      class="flex-1"
       :columns="columns"
       :pagination-options="{
         manualPagination: true,
-        pageCount: Math.ceil(totalDataCount / pagination.pageSize)
+        pageCount: Math.ceil(queryCount / pagination.pageSize)
       }"
-      class="flex-1"
     />
 
     <!-- Pagination -->
-    <div class="flex justify-center border-t border-default pt-4">
+    <div class="flex-center gap-2 border-t border-default pt-4">
       <UiPagination
-        :total="totalDataCount"
+        :total="queryCount"
         :default-page="pagination.pageIndex"
         :items-per-page="pagination.pageSize"
         @update:page="fetchNewPage"
       />
+
+      <p>Showing {{ pagination.pageSize }} per page</p>
     </div>
   </div>
 </template>

@@ -1,3 +1,5 @@
+import { RecruitmentApplicationWhereInput } from "~~/server/prisma/generated/models"
+
 export default defineEventHandler(async (e) => {
   const query = getQuery<{
     id: string
@@ -32,15 +34,9 @@ export default defineEventHandler(async (e) => {
   }
 
   // Build filters
-  const where = {
+  const where: RecruitmentApplicationWhereInput = {
     recruitmentId: recruitment.id,
-    ...(query.search
-      ? {
-          OR: [
-            { name: { contains: query.search, mode: "insensitive" } },
-            { email: { contains: query.search, mode: "insensitive" } }
-          ]
-        }
+    ...(query.search ? { name: { contains: query.search, mode: "insensitive" } }
       : {})
   }
 
@@ -49,7 +45,7 @@ export default defineEventHandler(async (e) => {
   const sortOrder = query.sortOrder ?? "asc"
 
   // Count applications with filters
-  const count = await prisma.recruitmentApplication.count({ where })
+  const queryCount = await prisma.recruitmentApplication.count({ where })
 
   // Fetch paginated data
   const applications = await prisma.recruitmentApplication.findMany({
@@ -63,7 +59,7 @@ export default defineEventHandler(async (e) => {
 
   return {
     data: applications,
-    count,
+    queryCount,
     page,
     limit
   }
