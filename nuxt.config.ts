@@ -56,10 +56,10 @@ export default defineNuxtConfig({
 
   extends: ["./layers/ui"],
 
-  $production: {
-    image: { provider: 'netlify' },
-    nitro: { preset: "netlify" }
-  },
+  // $production: {
+  //   image: { provider: 'netlify' },
+  //   nitro: { preset: "netlify" }
+  // },
 
   routeRules: {
     "/": { prerender: true },
