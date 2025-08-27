@@ -25,8 +25,9 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@pinia/nuxt",
     "notivue/nuxt",
-    "nuxt-tiptap-editor"
     // "@vue-email/nuxt"
+    "nuxt-tiptap-editor",
+    "@nuxthub/core"
   ],
 
   app: {
