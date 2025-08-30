@@ -1,70 +1,91 @@
 <script lang="ts" setup>
-  import "swiper/css"
-  import "swiper/css/autoplay"
-  import "swiper/css/pagination"
-  import "swiper/css/effect-coverflow"
-
-  import { Autoplay, Pagination, EffectCoverflow } from "swiper/modules"
-  import { Swiper, SwiperSlide } from "swiper/vue"
-
-  const { data } = await useFetch("/api/content/get")
-  const slides = computed(() => (data.value?.heroSlider as IHeroSlide[]) || [])
-
-  const swiperConfig = {
-    modules: [Autoplay, Pagination, EffectCoverflow],
-    effect: "coverflow",
-    pagination: { dynamicBullets: true, clickable: true },
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false
-    }
+const slides = [
+  {
+    key: "slider-1",  
+    imgUrl: "/tinubu.jpg",
+    name: "Bola Ahmed Tinubu (GCFR)",
+    position: "President, Federal Republic of Nigeria"
+  },
+  {
+    key: "slider-2",
+    imgUrl: "/kaura.jpg",
+    name: "Comrade Dr. Nasir Idris (Kauran Gwandu)",
+    position: "Executive Governor, Kebbi State"
+  },
+  {
+    key: "slider-3",
+    imgUrl: "/tafida.jpg",
+    name: "Umar Abubakar (Tafidan Kabi)",
+    position: "Deputy Governor, Kebbi State"
+  },
+  {
+    key: "slider-4",
+    imgUrl: "/commissioner-2.jpg",
+    name: "Dr. Halimatu Muhammad Bande",
+    position: "Hon. Commissioner For Basic and Secondary Education"
+  },
+  {
+    key: "slider-5",
+    imgUrl: "/perm-sec.jpg",
+    name: "Abubakar Magaji Nayilwa",
+    position: "Permanent Secretary, Min. For Basic and Secondary Education"
   }
+]
+
+// const $content = useContentStore()
+// await $content.fetchContent()
+// const slides = $content.getSlides
 </script>
 
 <template>
-  <div v-if="data" w="full" lt-md="max-w-400px" h="50vh md:70vh">
-    <swiper v-bind="swiperConfig" class="w-full h-full">
-      <swiper-slide
-        v-for="item in slides"
-        relative
-        rounded="lg"
-        overflow="hidden"
+  <div v-if="slides && slides.length" class="mx-auto max-w-[640px]" aria-roledescription="carousel">
+    <UiCarousel
+      loop
+      dots
+      fade
+      :items="slides"
+      v-slot="{ item }"
+      :autoplay="{ delay: 2000 }"
+      class="w-full"
+    >
+      <!-- Slide box: enforces same width × height via aspect-ratio -->
+      <div
+        class="relative w-full overflow-hidden rounded-lg"
+        style="aspect-ratio: 4/3;"
+        role="group"
+        :aria-label="item.name"
       >
         <img
-          preload
-          format="webp"
           :src="item.imgUrl"
-          :alt="item.name"
-          rounded="lg"
-          w="full"
-          h="full"
+          :alt="item.name || 'Slide image'"
+          class="w-full h-full object-cover rounded-lg"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
         />
 
-        <div
-          absolute
-          inset="0"
-          w="full"
-          h="full"
-          bg-gradient="to-t from-gray-900 to-transparent"
-          p="5 md:10"
-          flex="~ col"
-          justify="end"
-          space-y="2"
-          text="center"
-        >
-          <h3
-            text="white lg md:3xl"
-            font="bold"
-            line-clamp="1"
-            :title="item.name"
-          >
+        <!-- Overlay -->
+        <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-10 space-y-3 text-center bg-gradient-to-t from-gray-900/85 to-transparent">
+          <h3 class="text-white text-xl md:text-3xl font-bold line-clamp-1" :title="item.name">
             {{ item.name }}
           </h3>
-          <p text="white/80 xs md:base" lt-md="line-clamp-1" :title="item.name">
+
+          <p v-if="item.position" class="text-white/80 text-sm md:text-base line-clamp-1 md:line-clamp-none" :title="item.position">
             {{ item.position }}
           </p>
         </div>
-      </swiper-slide>
-    </swiper>
+      </div>
+    </UiCarousel>
   </div>
 </template>
+
+<style scoped>
+/* Fallback for browsers without aspect-ratio support */
+@supports not (aspect-ratio: 1 / 1) {
+  .relative[style] {
+    min-height: 360px; /* increased fallback height for the larger size */
+  }
+}
+</style>
+
+

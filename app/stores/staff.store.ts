@@ -56,3 +56,7 @@ export const useStaffStore = defineStore("staff-store", {
     }
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useStaffStore, import.meta.hot))
+}
